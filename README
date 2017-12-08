@@ -1,0 +1,22 @@
+This is an effort to order my usual preamble and allow others to use it.
+
+I have divided it in several files.
+
+djcobibh.sty: Bibliography and hyperlinks.
+    colr    : Color settings and library.
+    ftln    : Fonts.
+    grph    : Graphics, technical drawing and mathematical plotting.
+    lstb    : Lists and tables.
+    math    : Basic mathematical typesetting and macro library.
+
+Additionaly I included the package djcopresconf.sty, which is a module for
+generate a simple presentation environment that allows you full control of
+what are you doing, showing ways into generating your own complex macros to
+generate presentation elements.
+
+For this last one, I will upload later an example of presentation done with
+it.
+
+The idea of the packages is that they can be used without cross-dependence.
+
+Please, if you have questions, just ask.    
