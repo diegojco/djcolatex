@@ -1,0 +1,392 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{djcomath}[2017/10/17 DJCO minimal math package]
+
+% Extended macro capabilities.
+
+\RequirePackage{ifthen} % Logicals.
+\RequirePackage{xargs} % Optional arguments.
+\RequirePackage{pgffor} % For loops.
+
+% Mathematics and mathematical macros.
+
+%% American Mathematical Society improvements to plain LaTeX.
+
+\RequirePackage{amsmath} % AMS mathematical enhancements.
+\RequirePackage{amssymb} % AMS symbols extension.
+\RequirePackage{amsthm} % AMS theorem definition extension.
+
+%% Other improvements.
+
+\RequirePackage{bm} % Bold mathematical symbols.
+\RequirePackage{tensor} % Enhanced rendering of tensor-like objects.
+
+%% Variable-size delimiters.
+
+\newcommand{\grande}[3]{\left#1 #3\right#2}
+\newcommand{\grandea}[3]{\grande{#1}{#3}{#2}} % Alternative formulation.
+
+%%% Some common variable-size delimiters.
+
+\newcommand{\gpar}[1]{\grande{(}{)}{#1}}
+\newcommand{\gsqr}[1]{\grande{[}{]}{#1}}
+\newcommand{\gcur}[1]{\grande{\{}{\}}{#1}}
+\newcommand{\gang}[1]{\grande{\langle}{\rangle}{#1}}
+
+%% Logical operators.
+
+\newcommand{\ssii}{\longrightarrow} % if.
+\newcommand{\iiss}{\longleftarrow} % fi
+\newcommand{\ssiiii}{\longleftrightarrow} % iff.
+
+%% Total derivatives.
+
+%%% Total derivatives with Lagrangian notation.
+
+\newcommandx{\dtl}[2][2=1]{
+ \ifthenelse{#2<4}{
+  #1^{\foreach \n in {1,...,#2}{\prime}}
+ }{
+  #1^{(#2)}
+ }
+}
+
+%%% Total derivatives with Leibnizian notation.
+
+\newcommand{\dt}[2]{\frac{\operatorname{d}\!#1}{\mathrm{d}#2}} % Total derivative.
+\newcommand{\dtv}[3]{\grande{.}{\vert}{\dt{#1}{#2}}_{#2=#3}} % Evaluated total derivative.
+\newcommand{\dtn}[3]{\frac{\operatorname{d}^{#3}\!#1}{\mathrm{d}#2^{#3}}} % n-th total derivative.
+\newcommand{\dtnv}[4]{\grande{.}{\vert}{\dtn{#1}{#2}{#3}}_{#2=#4}} % n-th evaluated total derivative.
+
+\newcommandx{\deriv}[4][2=t,3=1,4,usedefault]{
+ \ifthenelse{\equal{#4}{}}{
+  \ifthenelse{\equal{#3}{1}}{
+   \dt{#1}{#2}
+  }{
+   \dtn{#1}{#2}{#3}
+  }
+ }{
+  \ifthenelse{\equal{#3}{1}}{
+   \dtv{#1}{#2}{#4}
+  }{
+   \dtnv{#1}{#2}{#3}{#4}
+  }
+ }
+} % Metacommand that distributes options depending on user input.
+
+\newcommandx{\derop}[3][2=t,3=1]{\deriv{\,}[#2][#3][]\,#1} % Metacommand to use it as an operator.
+
+%%% Material derivatives (Fluid dynamicists, meteorologists, engineers...).
+
+\newcommand{\Dt}[2]{\frac{\operatorname{D}\!#1}{\mathrm{D}#2}} % Material derivative.
+\newcommand{\Dtv}[3]{\grande{.}{\vert}{\Dt{#1}{#2}}_{#2=#3}} % Evaluated material derivative.
+\newcommand{\Dtn}[3]{\frac{\operatorname{D}^{#3}\!#1}{\mathrm{D}#2^{#3}}} % n-th material derivative.
+\newcommand{\Dtnv}[4]{\grande{.}{\vert}{\Dtn{#1}{#2}{#3}}_{#2=#4}} % n-th evaluated material derivative.
+
+\newcommandx{\Deriv}[4][2=t,3=1,4,usedefault]{
+ \ifthenelse{\equal{#4}{}}{
+  \ifthenelse{\equal{#3}{1}}{
+   \Dt{#1}{#2}
+  }{
+   \Dtn{#1}{#2}{#3}
+  }
+ }{
+  \ifthenelse{\equal{#3}{1}}{
+   \Dtv{#1}{#2}{#4}
+  }{
+   \Dtnv{#1}{#2}{#3}{#4}
+  }
+ }
+} % Metacommand that distributes options depending on user input.
+
+\newcommandx{\Derop}[3][2=t,3=1]{\Deriv{\,}[#2][#3][]\,#1} % Metacommand to use it as an operator.
+
+%% Partial derivatives.
+
+%%% Partial derivatives using index notation.
+
+\newcommand{\dep}[2]{\partial_{#2}#1} % Covariant-index partial derivative.
+\newcommand{\dpv}[4]{\grande{.}{\vert}{\dep{#1}{#2}}_{#3=#4}} % Evaluated covariant-index partial derivative.
+\newcommand{\dpc}[2]{\partial^{#2}#1} % Contravariant-index partial derivative.
+\newcommand{\dpcv}[4]{\grande{.}{\vert}{\dpc{#1}{#2}}_{#3=#4}} % Evaluated contravariant-index partial derivative.
+
+%%% Partial derivatives using Leibniz notation.
+
+\newcommand{\depl}[2]{\frac{\operatorname{\partial}\!#1}{\partial #2}} % Partial derivative.
+\newcommand{\deplv}[4]{\grande{.}{\vert}{\depl{#1}{#2}}_{#3=#4}} % Evaluated partial derivative.
+\newcommand{\depln}[3]{\frac{\operatorname{\partial}^{#3}\!#1}{\partial #2^{#3}}} % n-th partial derivative.
+\newcommand{\deplnv}[5]{\grande{.}{\vert}{\depln{#1}{#2}{#3}}_{#4=#5}} % n-th evaluated partial derivative.
+
+\newcommandx{\derivp}[5][3=1,4,5,usedefault]{
+ \ifthenelse{\equal{#4}{}\AND\equal{#5}{}}{
+  \ifthenelse{\equal{#3}{1}}{
+   \depl{#1}{#2}
+  }{
+   \depln{#1}{#2}{#3}
+  }
+ }{
+  \ifthenelse{\equal{#3}{1}}{
+   \deplv{#1}{#2}{#4}{#5}
+  }{
+   \deplnv{#1}{#2}{#3}{#4}{#5}
+  }
+ }
+} % Metacommand that distributes options depending on user input.
+
+\newcommandx{\depop}[3][3=1]{\derivp{}{#2}[#3][][]\,#1} % Metacommand to use it as an operator.
+
+%% Special differential operators, some only defined for certain dimensionalities.
+
+%%% Normal.
+
+\newcommand{\grd}[1]{\operatorname{\nabla}#1} % Gradient.
+\newcommand{\grdx}[2]{\operatorname{\nabla}_{\!#2}#1} % Gradient with respect a subset of more than one variable.
+\newcommand{\dvr}[1]{\operatorname{\nabla\cdot}#1} % Divergence.
+\newcommand{\rot}[1]{\operatorname{\nabla\times}#1} % Curl.
+\newcommand{\lap}[1]{\operatorname{\nabla}^{2}#1} % Laplacian.
+
+%%% In relation to other reference frame. Mostly in electrodynamics.
+
+\newcommand{\grdp}[1]{\operatorname{\nabla^{\prime}}#1} % Gradient.
+\newcommand{\grdpx}[2]{\operatorname{\nabla^{\prime}}_{\!#2}#1} % Gradient with respect a subset of more than one variable.
+\newcommand{\dvrp}[1]{\operatorname{\nabla^{\prime}\cdot}#1} % Divergence.
+\newcommand{\rotp}[1]{\operatorname{\nabla^{\prime}\times}#1} % Curl.
+\newcommand{\lapp}[1]{\operatorname{\nabla^{\prime}}^{2}#1} % Laplacian.
+
+%%% Covariant derivative.
+
+\newcommand{\dc}[2]{\operatorname{\bm{\nabla}}_{\!#2}#1} % Covariant derivative.
+
+%% Integral operator.
+
+\newcommand{\integ}[2]{\int{\!#1\,\mathrm{d}#2}} % Primitive.
+\newcommand{\integv}[4]{\int_{#1}^{#2}{\!#3\,\mathrm{d}#4}} % Quadrature.
+
+%% Modified functions.
+
+\newcommand{\abs}[1]{\grande{\lvert}{\rvert}{#1}} % Absolute value function.
+\newcommand{\norm}[1]{\grande{\lVert}{\rVert}{#1}} % Norm operator.
+\newcommand{\arccot}{\operatorname{arccot}} % Inverse cotangent.
+\newcommand{\arcsec}{\operatorname{arcsec}} % Inverse secant.
+\newcommand{\arccsc}{\operatorname{arccsc}} % Inverse cosecant.
+\newcommand{\sech}{\operatorname{sech}} % Hyperbolic secant function.
+\newcommand{\csch}{\operatorname{csch}} % Hyperbolic cosecant function.
+\newcommand{\arcsinh}{\operatorname{arcsinh}} % Inverse hyperbolic sine.
+\newcommand{\arccosh}{\operatorname{arccosh}} % Inverse hyperbolic cosine.
+\newcommand{\arctanh}{\operatorname{arctanh}} % Inverse hyperbolic tangent.
+\newcommand{\arccoth}{\operatorname{arccoth}} % Inverse hyperbolic cotangent.
+\newcommand{\arcsech}{\operatorname{arcsech}} % Inverse hyperbolic secant.
+\newcommand{\arccsch}{\operatorname{arccsch}} % Inverse hyperbolic cosecant.
+\newcommand{\erf}{\operatorname{erf}} % Error function.
+\newcommand{\iden}{\operatorname{id}} % Identity operator or function.
+
+%% More notation.
+
+\newcommand{\intr}{\operatorname{int}} % Set interior.
+\newcommand{\cerr}{\operatorname{cerr}} % Set closure.
+\newcommand{\fron}{\operatorname{\partial}\!} % Set boundary.
+\newcommand{\extr}{\operatorname{ext}} % Set exterior
+\renewcommand{\Re}{\operatorname{Re}} % Real part.
+\renewcommand{\Im}{\operatorname{Im}} % Imaginary part.
+\newcommand{\argvc}{\operatorname{arg}} % Complex argument.
+\newcommand{\argpvc}{\operatorname{Arg}} % Principal complex argument.
+\newcommand{\conj}[1]{\overline{#1}} % Complex conjugate.
+\newcommand{\bra}[1]{\grande{\langle}{\rvert}{#1}} % Bra.
+\newcommand{\ket}[1]{\grande{\lvert}{\rangle}{#1}} % Ket.
+\newcommand{\bracket}[1]{\gang{#1}} % Expectation value (from quantum mechanics).
+\newcommand{\braket}[2]{\grande{\langle}{\rvert}{#1\vphantom{#2}}\grande{.\phantom{\lvert}\!\!\!}{\rangle}{\vphantom{#1}#2}} % Braket.
+\newcommand{\desv}[1]{\Delta #1} % Mean Bias.
+\newcommand{\desvc}[1]{\bracket{\grande{(}{)}{\Delta #1}^{2}}} % Mean square bias.
+\newcommand{\desvca}[1]{\sigma_{#1}^{2}} % Mean square bias in terms of standard deviation.
+\newcommand{\desvest}[1]{\sigma_{#1}} % Standard deviation.
+\newcommand{\tr}{\operatorname{Tr}} % Trace of an operator.
+\renewcommand{\deg}{\operatorname{gr}} % Degree of a polynomial.
+
+%% Sequence limits.
+
+\newcommand{\limc}[2]{\lim_{#2\rightarrow\infty} #1} % Sequence limit.
+\newcommand{\seva}{\rightarrow} % Sequence limit shorthand.
+\newcommand{\limsupc}[2]{\limsup_{#2\rightarrow\infty} #1} % Sequence limit superior.
+\newcommand{\varlimsupc}[2]{\varlimsup_{#2\rightarrow\infty} #1} % Sequence limit superior (alt).
+\newcommand{\sevas}{\overline{\rightarrow}} % Sequence limit superior shorhand.
+\newcommand{\liminfc}[2]{\liminf_{#2\rightarrow\infty} #1} % Sequence limit inferior.
+\newcommand{\varliminfc}[2]{\varliminf_{#2\rightarrow\infty} #1} % Sequence limit inferior (alt).
+\newcommand{\sevai}{\underline{\rightarrow}} % Sequence limit inferior shorthand.
+
+%% Environments similar to theorems and proofs.
+
+%%% Theorem styles.
+
+\newtheoremstyle{e1a}{0.5em}{0.5em}{\itshape}{}{\sffamily\bfseries}{}{ }{\thmname{#1} \thmnumber{#2} \thmnote{ [#3]}}
+\newtheoremstyle{e2a}{0.5em}{0.5em}{\itshape}{}{\sffamily\bfseries\itshape}{}{ }{\thmname{#1} \thmnumber{#2} \thmnote{ [#3]}}
+\newtheoremstyle{e3a}{0.5em}{0.5em}{\itshape}{}{\sffamily}{}{ }{\thmname{#1} \thmnumber{#2} \thmnote{ [#3]}}
+\newtheoremstyle{e4a}{0.5em}{0.5em}{\itshape}{}{\sffamily\itshape}{}{ }{\thmname{#1} \thmnumber{#2} \thmnote{ [#3]}}
+\newtheoremstyle{e1b}{0.5em}{0.5em}{\itshape}{}{\bfseries}{}{ }{\thmname{#1} \thmnumber{#2} \thmnote{ [#3]}}
+\newtheoremstyle{e2b}{0.5em}{0.5em}{\itshape}{}{\bfseries\itshape}{}{ }{\thmname{#1} \thmnumber{#2} \thmnote{ [#3]}}
+\newtheoremstyle{e3b}{0.5em}{0.5em}{\itshape}{}{}{}{ }{\thmname{#1} \thmnumber{#2} \thmnote{ [#3]}}
+\newtheoremstyle{e4b}{0.5em}{0.5em}{\itshape}{}{\itshape}{}{ }{\thmname{#1} \thmnumber{#2} \thmnote{ [#3]}}
+\newtheoremstyle{e1c}{0.5em}{0.5em}{\itshape}{}{\rmfamily\bfseries}{}{ }{\thmname{#1} \thmnumber{#2} \thmnote{ [#3]}}
+\newtheoremstyle{e2c}{0.5em}{0.5em}{\itshape}{}{\rmfamily\bfseries\itshape}{}{ }{\thmname{#1} \thmnumber{#2} \thmnote{ [#3]}}
+\newtheoremstyle{e3c}{0.5em}{0.5em}{\itshape}{}{\rmfamily}{}{ }{\thmname{#1} \thmnumber{#2} \thmnote{ [#3]}}
+\newtheoremstyle{e4c}{0.5em}{0.5em}{\itshape}{}{\rmfamily\itshape}{}{ }{\thmname{#1} \thmnumber{#2} \thmnote{ [#3]}}
+
+\newtheoremstyle{ue1a}{0.5em}{0.5em}{}{}{\sffamily\bfseries}{}{ }{\thmname{#1} \thmnumber{#2} \thmnote{ [#3]}}
+\newtheoremstyle{ue2a}{0.5em}{0.5em}{}{}{\sffamily\bfseries\itshape}{}{ }{\thmname{#1} \thmnumber{#2} \thmnote{ [#3]}}
+\newtheoremstyle{ue3a}{0.5em}{0.5em}{}{}{\sffamily}{}{ }{\thmname{#1} \thmnumber{#2} \thmnote{ [#3]}}
+\newtheoremstyle{ue4a}{0.5em}{0.5em}{}{}{\sffamily\itshape}{}{ }{\thmname{#1} \thmnumber{#2} \thmnote{ [#3]}}
+\newtheoremstyle{ue1b}{0.5em}{0.5em}{}{}{\bfseries}{}{ }{\thmname{#1} \thmnumber{#2} \thmnote{ [#3]}}
+\newtheoremstyle{ue2b}{0.5em}{0.5em}{}{}{\bfseries\itshape}{}{ }{\thmname{#1} \thmnumber{#2} \thmnote{ [#3]}}
+\newtheoremstyle{ue3b}{0.5em}{0.5em}{}{}{}{}{ }{\thmname{#1} \thmnumber{#2} \thmnote{ [#3]}}
+\newtheoremstyle{ue4b}{0.5em}{0.5em}{}{}{\itshape}{}{ }{\thmname{#1} \thmnumber{#2} \thmnote{ [#3]}}
+\newtheoremstyle{ue1c}{0.5em}{0.5em}{}{}{\rmfamily\bfseries}{}{ }{\thmname{#1} \thmnumber{#2} \thmnote{ [#3]}}
+\newtheoremstyle{ue2c}{0.5em}{0.5em}{}{}{\rmfamily\bfseries\itshape}{}{ }{\thmname{#1} \thmnumber{#2} \thmnote{ [#3]}}
+\newtheoremstyle{ue3c}{0.5em}{0.5em}{}{}{\rmfamily}{}{ }{\thmname{#1} \thmnumber{#2} \thmnote{ [#3]}}
+\newtheoremstyle{ue4c}{0.5em}{0.5em}{}{}{\rmfamily\itshape}{}{ }{\thmname{#1} \thmnumber{#2} \thmnote{ [#3]}}
+
+%%% Theoremoids.
+
+\theoremstyle{e1a}
+\newtheorem{axi}{Axiom} % Axioms numbered by section.
+\newtheorem*{axi*}{Axiom} % Axioms.
+\newtheorem{hyp}{Hypothesis} % Hypotheses numbered by section.
+\newtheorem*{hyp*}{Hypothesis} % Hypotheses
+
+\theoremstyle{e2a}
+\newtheorem{defi}{Definition} % Definitions numbered by section.
+\newtheorem*{defi*}{Definition} % Definitions.
+\newtheorem{mdefi}{Metadefinition} % Metadefinitions numbered by section.
+\newtheorem*{mdefi*}{Metadefinition} % Metadefinitions.
+
+\theoremstyle{ue1a}
+\newtheorem{nota}{Notation} % Notations numbered by section.
+\newtheorem*{nota*}{Notation} % Notations.
+
+\theoremstyle{e2b}
+\newtheorem{prop}{Proposition} % Propositions numbered by section.
+\newtheorem*{prop*}{Proposition} % Propositions.
+\newtheorem{mprop}{Metaproposition} % Metapropositions numbered by section.
+\newtheorem*{mprop*}{Metaproposition} % Metapropositions.
+\newtheorem{lema}[prop]{Lemma} % Lemmata numbered by section.
+\newtheorem*{lema*}{Lemma} % Lemmata.
+\newtheorem{mlema}[mprop]{Metalemma} % Metalemmata numbered by section.
+\newtheorem*{mlema*}{Metalemma} % Metalemmata.
+\newtheorem{teo}[prop]{Theorem} % Theorems numbered by section.
+\newtheorem*{teo*}{Theorem} % Theorems.
+\newtheorem{mteo}[mprop]{Metatheorem} % Metatheorems numbered by section.
+\newtheorem*{mteo*}{Metatheorema} % Metatheorems.
+\newtheorem{corol}[prop]{Corolary} % Corolaries numbered by section.
+\newtheorem*{corol*}{Corolary} % Corolaries.
+\newtheorem{mcorol}[mprop]{Metacorolary} % Metacorolaries numbered by section.
+\newtheorem*{mcorol*}{Metacorolary} % Metacorolaries.
+
+\theoremstyle{ue2b}
+\newtheorem{prob}{Problem} % Problems numbered by section.
+\newtheorem*{prob*}{Problem} % Problems.
+\newtheorem{obs}{Remark} % Remarks numbered by section.
+\newtheorem*{obs*}{Remark} % Remarks.
+
+\theoremstyle{ue2a}
+\newtheorem{ejem}{Example} % Examples numbered by section.
+\newtheorem*{ejem*}{Example} % Examples.
+
+\theoremstyle{ue1b}
+\newtheorem{algo}{Algorithm} % Algorithms numbered by section.
+\newtheorem*{algo*}{Algorithm} % Algorithms.
+
+%%% Proofoids.
+
+%%%% Proof environment generator.
+
+\newcommand{\newproof}[3]{ % Defines newproof command taking 3 non optional arguments.
+ \newenvironment{#1}[1][]{ % Define an environment, named #1, with one opt arg with empty default. 
+  \begin{trivlist} % Begins a trivlist to setup the title of the proof.
+   \item[
+    \hspace{\labelsep} % Indentation.
+    \textnormal{ % With normal...
+     \textbf{ % boldface font...
+      #2 % write the title #2...
+      \ifthenelse{\equal{##1}{}}{ % and test if env opt arg is empty...
+       % in which case it is and unnamed proof...
+      }{
+       ~(##1) % otherwise it is a named proof.
+      }
+     }
+    }
+   ]
+ }{ % Closes the environment with...
+  #3 % the tombstone (QED) of the proof...
+  \end{trivlist} % and the closing of the trivlist.
+ }
+}
+
+\newcommand{\qedtext}{\ensuremath{\square}}
+\renewcommand{\qed}{{\ifhmode\unskip\nobreak\hfil\penalty50 \hskip1em \else\nobreak\fi
+ \mbox{}\nobreak\hfil\qedtext%
+ \parfillskip=0pt \finalhyphendemerits=0 \par}}
+    
+%%%% Proofs.
+
+\newproof{sol}{Solution.}{\qed} %Solution of Problems and Examples.
+\newproof{dem}{Proof.}{\qed} %Proof of Propositions, Lemmata, Theorems, Corolaries and Algorithms.
+
+% More math symbols.
+
+\RequirePackage{mathabx}
+
+% Système International d'unités compliance.
+
+\RequirePackage{siunitx}
+
+% Notations for Earth System Science.
+
+%% Radiative Balance and Climate Sensitivity.
+
+%%% Symbols, Units and Macros.
+
+%%%% Symbols.
+
+\newcommand{\Te}{\mathrm{T}} % Temperature. Commonly GMST.
+\newcommand{\Ni}{\mathrm{N}} % Heat uptake or imbalance.
+\newcommand{\Fo}{\mathrm{F}} % Forcing.
+\newcommand{\Rs}{\mathrm{R}} % Response (also called feedback).
+\newcommand{\ECS}{\mathrm{ECS}} % Equilibrium climate sensitivity.
+
+%%%% Units.
+
+%%%%% Temperature.
+
+\DeclareSIUnit{\C}{\celsius} % Celsius abbreviation.
+
+%%%%% Energy flux.
+
+\DeclareSIUnit{\flx}{\W\per\m\squared} % Energy flux density.
+
+%%%%% Climate feedback.
+
+\DeclareSIUnit{\fbk}{\flx\per\K} % Climate feedback.
+
+%%%%% Miscelaneous.
+
+\DeclareSIUnit{\AU}{\astronomicalunit} % Astronomical unit.
+
+%%%%% Equal-or-greater-than-a-year timescales.
+
+\DeclareSIUnit{\annus}{a} % Annus.
+\DeclareSIUnit{\a}{\annus} % Annus abbreviation.
+\DeclareSIUnit{\daa}{\deca\a} % Decaannum. Decadal.
+\DeclareSIUnit{\ha}{\hecto\a} % Hectoannum. Centennial.
+\DeclareSIUnit{\ka}{\kilo\a} % Kiloannum. Age.
+\DeclareSIUnit{\Ma}{\mega\a} % Megaannum. Eon.
+\DeclareSIUnit{\Ga}{\giga\a} % Gigaannum. Universe.
+\DeclareSIUnit{\year}{yr} % Year.
+\DeclareSIUnit{\yr}{\year} % Year abbreviation.
+\DeclareSIUnit{\dayr}{\deca\yr} % Decayears.
+\DeclareSIUnit{\hyr}{\hecto\yr} % Hectoyears.
+\DeclareSIUnit{\kyr}{\kilo\yr} % Kiloyears.
+\DeclareSIUnit{\Myr}{\mega\yr} % Megayears.
+\DeclareSIUnit{\Gyr}{\giga\yr} % Gigayears.
+
+%%%% Macros.
+
+\renewcommand{\nuclide}[2]{\tensor*[^{#1}]{\mathrm{#2}}{}} % Write nuclides.
+
+\endinput

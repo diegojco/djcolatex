@@ -1,0 +1,140 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{djcoftln}[2017/10/17 DJCO font-language control]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% AUXILIARY PACKAGES.
+
+\RequirePackage{ifthen} % Logicals.
+\RequirePackage{kvoptions} % Option handling.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Declaring options.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Declare the families and prefixes.
+
+\SetupKeyvalOptions{
+ family=FTLN,
+ prefix=FTLN@
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Font selection. Edit if you want other defaults.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Fonts.
+
+\DeclareStringOption[Futura]{main}
+\DeclareStringOption[Futura]{sans}
+\DeclareStringOption[PT Mono]{mono}
+\DeclareStringOption[]{math}
+\DeclareStringOption[Futura]{digit}
+\DeclareStringOption[Futura]{roman}
+
+%%% Font Styles and/or Options (see fontspec/mathspec documentation).
+
+%%%% Main.
+
+\DeclareStringOption[]{mainopts}
+
+%%%% Sans.
+
+\DeclareStringOption[]{sansopts}
+
+%%%% Mono.
+
+\DeclareStringOption[]{monoopts}
+
+%%%% Math.
+
+\DeclareStringOption[]{mathopts}
+
+%%%% Math Digits.
+
+\DeclareStringOption[]{digitopts}
+
+%%%% Roman.
+
+\DeclareStringOption[]{romanopts}
+
+%% Line spread.
+
+\DeclareStringOption[1.12]{linespread}
+
+%% Polyglossia main language.
+
+\DeclareStringOption[english]{mainlanguage}
+
+% Processing options.
+
+\ProcessKeyvalOptions*
+
+%%%%%%%%%%%%%%%% Base AMS Mathematics (for avoiding clashes), fonts, languages.
+
+%%%%%%%%%%%%%%%%%%%% American Mathematical Society improvements to plain LaTeX.
+
+\RequirePackage{amsmath} % AMS mathematical enhancements.
+\RequirePackage{amssymb} % AMS symbols extension.
+\RequirePackage{amsthm} % AMS theorem definition extension.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Other improvements.
+
+\RequirePackage{bm} % Bold mathematical symbols.
+\RequirePackage{tensor} % Enhanced rendering of tensor-like objects.
+
+%%%%%%%%%%%%%%%%%% Math fonts (not managed by mathspec, except for the digits).
+
+\ifthenelse{\equal{\FTLN@math}{}}{
+  %\RequirePackage[OT1]{eulervm}
+}{
+ \ifthenelse{\equal{\FTLN@mathopts}{}}{
+  \RequirePackage{\FTLN@math}
+ }{
+  \RequirePackage[\FTLN@mathopts]{\FTLN@math}
+ }
+}
+
+%% Fontspec and mathspec: font fine tuning. Fontspec allows you to use any font
+%% in your system, whether they are MetaFont, TrueType or OpenType.
+%%
+%% Mathspec loads Fontspec. Take into account that this only works when
+%% compiling with XeTeX or LuaTeX, which are more modern compilers.
+
+\RequirePackage{mathspec}
+ \ifthenelse{\equal{\FTLN@mainopts}{}}{
+  \setmainfont{\FTLN@main}
+ }{
+  \setmainfont{\FTLN@main}[\FTLN@mainopts]
+ } % Main font (Sometimes serif, but my default is sans).
+ \ifthenelse{\equal{\FTLN@sansopts}{}}{
+  \setsansfont{\FTLN@sans}
+ }{
+  \setsansfont{\FTLN@sans}[\FTLN@sansopts]
+ } % Sans font.
+ \ifthenelse{\equal{\FTLN@monoopts}{}}{
+  \setmonofont{\FTLN@mono}
+ }{
+  \setmonofont{\FTLN@mono}[\FTLN@monoopts]
+ } % Mono font.
+ \ifthenelse{\equal{\FTLN@digitopts}{}}{
+  \setmathsfont(Digits){\FTLN@digit}
+ }{
+  \setmathsfont(Digit)[\FTLN@digitopts]{\FTLN@digit}
+ } % Math digits font.
+ \ifthenelse{\equal{\FTLN@romanopts}{}}{
+  \setmathrm{\FTLN@roman}
+ }{
+  \setmathrm{\FTLN@roman}[\FTLN@romanopts]
+ } % Operator font.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Typography and spacing.
+
+\RequirePackage{microtype} % Enhanced typographic features and smart spacing.
+\linespread{\FTLN@linespread} % Amount of line spacing.
+
+%%%%%%%% Localization features (hyphenation, section titles...). Only works for
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% XeLaTeX or LuaLaTeX.
+
+\RequirePackage{polyglossia}
+ \setmainlanguage{\FTLN@mainlanguage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Date formatting.
+
+\RequirePackage[datesep=.,style=ddmmyyyy]{datetime2}
+
+\endinput

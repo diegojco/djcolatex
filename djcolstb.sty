@@ -1,0 +1,22 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{djcolstb}[2017/10/17 DJCO lists-tables settings]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% MAIN PACKAGES.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% List control.
+
+\RequirePackage{enumitem} % More control over list environments.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Table control.
+
+\RequirePackage{tabularx} % Enhanced tables, including multicolumn.
+\RequirePackage{multirow} % Implementation of multirows for tables.
+\RequirePackage{booktabs} % Publication quality tables.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Stable table environment.
+
+\newenvironment{tablabona}[1][1]{
+ \renewcommand*{\arraystretch}{#1}\tabular
+}{\endtabular}
+
+\endinput

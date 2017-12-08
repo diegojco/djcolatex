@@ -1,0 +1,109 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{djcocolr}[2017/12/08 DJCO color package and definitions]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% MAIN PACKAGE.
+
+\RequirePackage[
+ dvipsnames, % Predefined named standard colors of dvips spec.
+ svgnames, % Predefined named standard colors of svg spec.
+ x11names, % Predefined named standard colors of x11 spec.
+ hyperref % Extra support for hyperref package.
+]{xcolor} % Extended color package.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% MACROS.
+
+\newcommand{\emphh}[2]{\textcolor{#1}{\textit{#2}}} % Emphasis.
+\newcommand{\codex}[2]{\textcolor{#1}{\texttt{#2}}} % Code.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% COLOR LIBRARY.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% White and Black.
+
+\definecolor{weiß}{rgb}{1.000,1.000,1.000}
+\definecolor{schwarz}{rgb}{0.000,0.000,0.000}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Primary colors.
+
+\definecolor{rot}{rgb}{1.000,0.000,0.000}
+\definecolor{grün}{rgb}{0.000,1.000,0.000}
+\definecolor{blau}{rgb}{0.000,0.000,1.000}
+\definecolor{cyan}{rgb}{0.000,1.000,1.000}
+\definecolor{magenta}{rgb}{1.000,0.000,1.000}
+\definecolor{gelb}{rgb}{1.000,1.000,0.000}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Other colors.
+
+\definecolor{orange}{rgb}{1.000,0.388,0.000}
+\definecolor{violett}{rgb}{0.44314,0.13726,0.76471}
+\definecolor{dunkelblau}{rgb}{0.15686,0.18824,0.78039}
+\definecolor{dunkelorange}{rgb}{0.90980,0.29020,0.04706}
+\definecolor{klementine}{rgb}{1.00000,0.51373,0.21961}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% UNAM institutional colors.
+
+\definecolor{blauUNAM}{rgb}{0.000,0.169,0.478}
+\definecolor{goldgelbUNAM}{rgb}{0.733,0.533,0.000}
+\definecolor{goldgelb}{rgb}{1.000,0.702,0.000}
+\definecolor{goldgelb2}{rgb}{0.859,0.604,0.000}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% MPG, UHH, DKRZ, KCH institutional colors.
+
+\definecolor{hellergrünmpg}{RGB}{245,248,249}
+\definecolor{hellgrünmpg}{RGB}{191,217,212}
+\definecolor{mittelgrünmpg}{RGB}{123,181,173}
+\definecolor{dunkelgrünmpg}{RGB}{0,118,104}
+\definecolor{rotuhh}{rgb}{0.92941,0.10980,0.14118}
+\definecolor{rotkkh}{rgb}{0.75294,0.09804,0.22745}
+\definecolor{grünkkh}{rgb}{0.06275,0.63922,0.57255}
+\definecolor{blaukkh}{rgb}{0.60000,0.87451,0.97647}
+\definecolor{blauhel}{rgb}{0.17647,0.61961,0.87451}
+\definecolor{blaudkrz}{rgb}{0.08235,0.31765,0.58431}
+\definecolor{schwarzinstitut}{rgb}{0.13725,0.12157,0.12549}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% GRAYSCALE EQUIVALENTS FOR MONOCHROME SETTINGS.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%% Using a weighted average of the original RGB coordinates to obtain gray
+%%%%%%% intensity. The weighted average is based in human sensitivity to color.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Gray intensity = 0.21*R+0.72*G+0.07*B
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Primary colors.
+
+\definecolor{rotg}{rgb}{0.210,0.210,0.210}
+\definecolor{grüng}{rgb}{0.720,0.720,0.720}
+\definecolor{blaug}{rgb}{0.070,0.070,0.070}
+\definecolor{cyang}{rgb}{0.790,0.790,0.790}
+\definecolor{magentag}{rgb}{0.280,0.280,0.280}
+\definecolor{gelbg}{rgb}{0.930,0.930,0.930}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Other colors.
+
+\definecolor{orangeg}{rgb}{0.48953,0.48953,0.48953}
+\definecolor{violettg}{rgb}{0.24542,0.24542,0.24542}
+\definecolor{dunkelblaug}{rgb}{0.22310,0.22310,0.22310}
+\definecolor{dunkelorangeg}{rgb}{0.40330,0.40330,0.40330}
+\definecolor{klementineg}{rgb}{0.59526,0.59526,0.59526}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% UNAM institutional colors.
+
+\definecolor{blauUNAMg}{rgb}{0.155,0.155,0.155}
+\definecolor{goldgelbUNAMg}{rgb}{0.538,0.538,0.538}
+\definecolor{goldgelbg}{rgb}{0.615,0.615,0.615}
+\definecolor{goldgelb2g}{rgb}{0.715,0.715,0.715}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% MPG, UHH, DKRZ, KCH institutional colors.
+
+\definecolor{hellergrünmpgg}{rgb}{0.97035,0.97035,0.97035}
+\definecolor{hellgrünmpgg}{rgb}{0.82820,0.82820,0.82820}
+\definecolor{mittelgrünmpgg}{rgb}{0.65984,0.65984,0.65984}
+\definecolor{dunkelgrünmpgg}{rgb}{0.36172,0.36172,0.36172}
+\definecolor{rotuhhg}{rgb}{0.28412,0.28412,0.28412}
+\definecolor{rotkkhg}{rgb}{0.24463,0.24463,0.24463}
+\definecolor{grünkkhg}{rgb}{0.51349,0.51349,0.51349}
+\definecolor{blaukkhg}{rgb}{0.82400,0.82400,0.82400}
+\definecolor{blauhelg}{rgb}{0.54439,0.54439,0.54439}
+\definecolor{blaudkrzg}{rgb}{0.28690,0.28690,0.28690}
+\definecolor{schwarzinstitutg}{rgb}{0.12514,0.12514,0.12514}
+
+\endinput

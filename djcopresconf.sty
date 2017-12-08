@@ -1,0 +1,437 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{djcopresconf}[2017/11/24 DJCO presentation configuration]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% AUXILIARY PACKAGES.
+
+\RequirePackage{calc} % Calculate TeX lengths.
+\RequirePackage{lastpage} % Get the last page number.
+\RequirePackage{scrlayer-scrpage} % Modify headings and footnotes.
+\RequirePackage{xargs} % Extended command definition.
+\RequirePackage{ifthen} % Conditional interface.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% GEOMETRY OF PAGE.
+
+\newlength{\myfootheight} % Lengths of header, footer and margin. 
+\newlength{\myheadheight}
+\newlength{\mymarginwidth}
+
+\setlength{\myfootheight}{15mm} % Definition of former lengths.
+\setlength{\myheadheight}{\myfootheight}
+\setlength{\mymarginwidth}{(\myheadheight+\myfootheight)*\ratio{1mm}{3mm}}
+
+\usepackage[
+ top=\myheadheight,
+ bottom=\myfootheight,
+ left=\mymarginwidth,
+ right=\mymarginwidth,
+ headheight=\myheadheight,
+ headsep=0mm,
+ footskip=\myfootheight,
+ footnotesep=0mm,
+ nomarginpar
+]{geometry} % Geometry will ease your task to produce layout.
+
+\setlength{\parindent}{0mm} % Indentation of the paragraphs.
+\setlength{\footheight}{\myfootheight} % Sets the footer height.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Interfaces for font size selection.
+
+\newcommand{\fntszheadline}{\Large} % Headline fontsize for non-cover slides. 
+\newcommand{\fontsizeheadline}[1]{
+ \renewcommand{\fntszheadline}{\csname#1\endcsname}
+}
+\newcommand{\fntszpagnum}{\normalsize} % Page numbering fontsize.
+\newcommand{\fontsizepagnum}[1]{
+ \renewcommand{\fntszpagnum}{\csname#1\endcsname}
+}
+\newcommand{\fntszauthr}{\large} % Font sizes for cover slide.
+\newcommand{\fontsizeauthor}[1]{
+ \renewcommand{\fntszauthr}{\csname#1\endcsname}
+}
+\newcommand{\fntsztitle}{\Large}
+\newcommand{\fontsizetitle}[1]{
+ \renewcommand{\fntsztitle}{\csname#1\endcsname}
+}
+\newcommand{\fntszaffil}{\small}
+\newcommand{\fontsizeaffiliation}[1]{
+ \renewcommand{\fntszaffil}{\csname#1\endcsname}
+}
+\newcommand{\fntszsuprv}{\normalsize}
+\newcommand{\fontsizesupervisor}[1]{
+ \renewcommand{\fntszsuprv}{\csname#1\endcsname}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Modification of header and footer.
+
+\pagestyle{scrheadings} % Switch to the normal head/footer settings.
+\ihead[]{} % Inner header [plain style]{present style}.
+\chead[]{\myhead} % Center header.
+\ohead[]{} % Outer header.
+\ifoot[\myfootfirst]{\myfoot{\pageref{LastPage}}} % The same for footers.
+\cfoot[]{}
+\ofoot[]{}
+\setkomafont{pageheadfoot}{\upshape} % Set the font for them.
+
+% In the following we construct the macro \myfootfirst, \myfoot and \myhead.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Definition of \mystripe macro.
+
+% Some longitudes.
+
+\newlength{\cverti} % Vertical span.
+\newlength{\corr} % Correction.
+\newlength{\cheight} % Vertical span absolute value.
+\newlength{\choriz} % Horizontal span.
+\newlength{\offset} % Absolute value of correction.
+\newlength{\mygraphicleftwidth} % Graphics widths
+\newlength{\mygraphicrightwidth}
+
+% Some reusable commands.
+
+\newcommand{\clposition}{} % Current left position.
+\newcommand{\crposition}{} % Current right position.
+\newcommand{\mygraphicleft}{} % Storage of graphics at left side.
+\newcommand{\mygraphicright}{} % Storage of graphics at right side.
+
+% Definition of \mystripe, it accepts 5 arguments. The first two are mandatory
+% the three remaining are optional and have their defaults.
+
+\newcommandx{\mystripe}[5][
+ 3=,
+ 4=0mm,
+ 5=,
+ usedefault
+]
+{ 
+ \ifthenelse{\equal{#3}{bot}\OR\equal{#3}{}}{ % 3 equal to bot(tom) or empty...
+  \renewcommand{\clposition}{current page.south west} % ...defines a footer...
+  \renewcommand{\crposition}{current page.south east}
+  \setlength{\cverti}{\myfootheight}
+  \setlength{\cheight}{\myfootheight}
+  \setlength{\corr}{-#4}
+ }{ % ...otherwise...
+  \renewcommand{\clposition}{current page.north west} % ...defines a header...
+  \renewcommand{\crposition}{current page.north east}
+  \setlength{\cverti}{-\myheadheight}
+  \setlength{\cheight}{\myheadheight}
+  \setlength{\corr}{#4}
+ }
+ \setlength{\choriz}{\paperwidth}
+ \setlength{\offset}{#4}
+ 
+ \ifthenelse{\equal{#1}{}}{ % 1 is empty, then does nothing...
+  
+ }{ % ...otherwise, stores left graphic element in \mygraphicleft...
+  \renewcommand{\mygraphicleft}{
+   \includegraphics[height=\cheight-\offset,keepaspectratio]{#1}
+  }
+  \setlength{\mygraphicleftwidth}{\widthof{\mygraphicleft}} % Checks its width.
+ }
+ \ifthenelse{\equal{#2}{}}{ % This is the analogous for the right one.
+  
+ }{
+  \renewcommand{\mygraphicright}{
+   \includegraphics[height=\cheight-\offset,keepaspectratio]{#2}
+  } % Loads right graphic.
+  \setlength{\mygraphicrightwidth}{\widthof{\mygraphicright}}
+ }
+ 
+ \begin{tikzpicture}[remember picture,overlay] % Inside a TikZ picture...
+  \node[
+   xshift=\choriz/2,
+   yshift=\cverti/2,
+   rectangle,
+   fill,
+   inner sep=0pt,
+   minimum width=\choriz,
+   minimum height=\cheight,
+   color=hellergrünmpg
+  ] at (\clposition) {}; % Composes background...
+  \ifthenelse{\NOT\equal{#1}{}}{ % ...the graphic elements...
+   \node[
+    xshift=\mygraphicleftwidth/2,
+    yshift=((\cverti+\corr)/2)-(\corr/2)
+   ] at (\clposition) {\mygraphicleft};
+  }{
+   
+  }
+  \ifthenelse{\NOT\equal{#2}{}}{
+   \node[
+    xshift=-\mygraphicrightwidth/2,
+    yshift=((\cverti+\corr)/2)-(\corr/2)
+   ] at (\crposition) {\mygraphicright};
+  }{
+   
+  }
+  \ifthenelse{\NOT\equal{#5}{}}{ % ...and extra element at center of stripe.
+   \node[
+    xshift=\choriz/2,
+    yshift=\cverti/2,
+    rectangle,
+    inner sep=0pt,
+    text=schwarz
+   ] at (\clposition) {#5};
+  }{
+   
+  }
+ \end{tikzpicture}
+}
+
+% With \mystripe we construct the footer macros.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Wrappers and interfaces for the header and footer.
+
+\newcommand{\@logoleft}{} % Interfaces for adding logos.
+\newcommand{\logoleft}[1]{\renewcommand{\@logoleft}{#1}}
+
+\newcommand{\@logoright}{}
+\newcommand{\logoright}[1]{\renewcommand{\@logoright}{#1}}
+
+\newcommand{\@logoleftf}{}
+\newcommand{\logoleftf}[1]{\renewcommand{\@logoleftf}{#1}}
+
+\newcommand{\@logorightf}{}
+\newcommand{\logorightf}[1]{\renewcommand{\@logorightf}{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% For the first slide: \myfootfirst.
+
+\newcommand{\myfootfirst}{\mystripe{\@logoleftf}{\@logorightf}[bot][3mm][]}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% For the following \myfoot and \myhead.
+
+\newcommand{\myfoot}[1]{
+ \mystripe{\@logoleft}{\@logoright}[bot][3mm][{\fntszpagnum \thepage/#1}]
+}
+
+\newcommand{\myhead}{}
+\newcommand{\newhead}[1]{
+ \renewcommand{\myhead}{\textbf{\fntszheadline #1}}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Wrapper to begin a slide.
+
+\newcommand{\myslide}[1]{
+ \clearpage
+ \ifthenelse{\equal{\thepage}{1}}{
+  \pagestyle{scrheadings}
+ }{
+  
+ }
+ \newhead{#1}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Definition of the title page.
+
+\newlength{\maxboxwidth} % Some lengths.
+\setlength{\maxboxwidth}{(\paperwidth-(2\mymarginwidth))*\real{0.75}}
+\newlength{\posboxheight}
+\setlength{\posboxheight}{
+ (\paperheight-(\myfootheight+\myheadheight))/3
+}
+\newlength{\distboxheight}
+\setlength{\distboxheight}{
+ \myfootheight
+}
+\newlength{\authrheight}
+\newlength{\titleheight}
+\newlength{\affilheight}
+\newlength{\suprvheight}
+\newlength{\totalheight}
+
+\newcommand{\myauthor}{} % Some storing macros.
+\newcommand{\mytitle}{}
+\newcommand{\myaffiliation}{}
+\newcommand{\mysupervisor}{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Composition of the cover slide: \mycover.
+
+% It takes 4 optional arguments (author, title, affiliation and supervisor) and
+% composes with TikZ the cover slide.
+
+\newcommandx{\mycover}[4][
+ 1=Author,
+ 2=Title,
+ 3=Affiliation,
+ 4=,
+ usedefault
+]
+{
+ \renewcommand{\myauthor}{ % Stores in minipages the information.
+  \begin{minipage}{\maxboxwidth}
+   \begin{flushright}
+    \textnormal{\fntszauthr #1}
+   \end{flushright}
+  \end{minipage}
+ }
+ \setlength{\authrheight}{\heightof{\myauthor}}
+ \setlength{\totalheight}{\authrheight}
+ \renewcommand{\mytitle}{
+  \begin{minipage}{\maxboxwidth}
+   \begin{flushright}
+    \textbf{\fntsztitle #2}
+   \end{flushright}
+  \end{minipage}
+ }
+ \setlength{\titleheight}{\heightof{\mytitle}}
+ \addtolength{\totalheight}{\titleheight}
+ \renewcommand{\myaffiliation}{
+  \begin{minipage}{\maxboxwidth}
+   \begin{flushright}
+    \textnormal{\fntszaffil #3}
+   \end{flushright}
+  \end{minipage}
+ }
+ \setlength{\affilheight}{\heightof{\myaffiliation}}
+ \addtolength{\totalheight}{\affilheight}
+ \renewcommand{\mysupervisor}{
+  \begin{minipage}{\maxboxwidth}
+   \begin{flushright}
+    \textnormal{\fntszsuprv #4}
+   \end{flushright}
+  \end{minipage}
+ }
+ \setlength{\suprvheight}{\heightof{\mysupervisor}}
+ \addtolength{\totalheight}{\suprvheight}
+ \begin{tikzpicture}[remember picture,overlay] % Composes this with TikZ.
+  \coordinate (a) at (current page.south east);
+  \coordinate (b) at (\mymarginwidth,0);
+  \coordinate (b1) at (0,\distboxheight);
+  \coordinate (c) at ($(a)-(b)+(b1)$);
+  \coordinate (d) at ($(c)+(0,\posboxheight)$);
+  \coordinate (e) at ($(d)+(0,0.5\posboxheight)$);
+  \coordinate (e1) at ($(e)+(0,-\posboxheight/6)$);
+  \coordinate (e2) at ($(e)+(0,\posboxheight/6)$);
+  \coordinate (f) at ($(e)+(0,0.5\posboxheight)$);
+  \node[
+   xshift=\paperwidth/2,
+   yshift=-(\paperheight-\myfootheight)/2,
+   rectangle,
+   fill,
+   inner sep=0pt,
+   minimum width=\paperwidth,
+   minimum height=\paperheight-\myfootheight,
+   top color=dunkelgrünmpg,
+   bottom color=hellergrünmpg,
+  ] at (current page.north west){};
+  \node[
+   xshift=-\maxboxwidth/2,
+%   yshift=-(\paperheight-\myfootheight)/2,
+   rectangle,
+%   fill,
+   inner sep=0pt,
+%   minimum width=\mytitlew,
+%   minimum height=\titlemaxheight,
+%   top color=dunkelgrünmpg,
+%   bottom color=hellergrünmpg,
+    text=weiß,
+%   align=right,
+  ] at (f){\mytitle};
+  \ifthenelse{\equal{#4}{}}{
+   \node[
+    xshift=-\maxboxwidth/2,
+%    yshift=-(\paperheight-\myfootheight)/2,
+    rectangle,
+%    fill,
+    inner sep=0pt,
+%    minimum width=\myauthorw,
+%    minimum height=\titlemaxheight,
+%    top color=dunkelgrünmpg,
+%    bottom color=hellergrünmpg,
+    text=weiß,
+    align=right,
+   ] at (e){\myauthor};
+  }{
+   \node[
+    xshift=-\maxboxwidth/2,
+%    yshift=-(\paperheight-\myfootheight)/2,
+    rectangle,
+%    fill,
+    inner sep=0pt,
+%    minimum width=\myauthorw,
+%    minimum height=\titlemaxheight,
+%    top color=dunkelgrünmpg,
+%    bottom color=hellergrünmpg,
+    text=weiß,
+    align=right,
+   ] at (e2){\myauthor};
+   \node[
+    xshift=-\maxboxwidth/2,
+%    yshift=-(\paperheight-\myfootheight)/2,
+    rectangle,
+%    fill,
+    inner sep=0pt,
+%    minimum width=\myauthorw,
+%    minimum height=\titlemaxheight,
+%    top color=dunkelgrünmpg,
+%    bottom color=hellergrünmpg,
+    text=weiß,
+    align=right,
+   ] at (e1){\mysupervisor}; 
+  }
+  \node[
+   xshift=-\maxboxwidth/2,
+%   yshift=-(\paperheight-\myfootheight)/2,
+   rectangle,
+%   fill,
+   inner sep=0pt,
+%   minimum width=\myaffiliationw,
+%   minimum height=\titlemaxheight,
+%   top color=dunkelgrünmpg,
+%   bottom color=hellergrünmpg,
+   text=weiß,
+   align=right,
+  ] at (d){\myaffiliation};
+ \end{tikzpicture}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Wrappers and interfaces for the cover.
+
+\newcommand{\@affiliation}{} % Interface for adding affiliation.
+\newcommand{\affiliation}[1]{\renewcommand{\@affiliation}{#1}}
+
+\newcommand{\@supervisor}{} % Interface for adding affiliation.
+\newcommand{\supervisor}[1]{\renewcommand{\@supervisor}{#1}}
+
+% Wrapper to use author title and affiliation to generate the cover.
+
+\newcommand{\myfirstslide}{
+ \pagestyle{plain.scrheadings}
+ \mycover[\@author][\@title][\@affiliation][\@supervisor]
+}
+
+% Set the counter of page to begin at 0. In this way the actual first slide is
+% the next to the title slide.
+
+\setcounter{page}{0}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Interface for equation marking.
+
+\newcommand{\tikzmark}[1]{
+ \tikz[baseline,remember picture] \coordinate (#1) {};
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Interface for boxing.
+
+\newcommandx{\mybox}[6][3=blaudkrz,4=hellgrünmpg,5=weiß,6=north,usedefault]{
+ \begin{tikzpicture}[
+  baseline=(current bounding box.#6)
+ ]
+  \node[
+   rectangle,
+   fill=#4,
+   draw=#3,
+   thick,
+   inner sep=2mm,
+   text justified,
+   rounded corners,
+   above,
+   text=#5,
+  ] at (0.5*#1+2mm+0.4pt,0) {
+   \begin{minipage}[t]{#1}
+    #2
+   \end{minipage}
+  };
+ \end{tikzpicture}
+}
+
+\endinput

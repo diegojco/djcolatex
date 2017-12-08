@@ -1,0 +1,53 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{djcobibh}[2017/12/08 DJCO references-hyperref setting]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% MAIN PACKAGES.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% (TODO: An interface for options).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Hyperref.
+
+\RequirePackage[
+ colorlinks=true,
+ linkcolor=black,
+ citecolor=violett,
+ urlcolor=blue,
+ plainpages=false,
+ pdfpagelabels
+]{hyperref} % Hyperref: make the links between citation and reference.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Quotation marks.
+
+\RequirePackage{csquotes} % Quotation schemes (used for references).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Biblatex.
+
+\RequirePackage[
+ backend=biber, % Processing program for the bibliography.
+ hyperref=true, % Hyperlinks to reference list from the citation.
+ style=authoryear-comp, % Citation style.
+ maxcitenames=2, % With n+1 authors, it uses first and et alii.
+ maxbibnames=1, % Same as before but in the reference list.
+ uniquename=init, % Name disambiguation with initials.
+ giveninits=true, % Use initials of the given name.
+ url=false, % Display or not URLs, if given.
+ doi=false, % Display or not DOIs, if given.
+ isbn=false, % Display or not ISBNs and ISSNs, if given.
+ sortcites=true, % Sort if multiple citing.
+ sorting=ynt, % Sorting scheme.
+]{biblatex} % BibLaTeX package, substitution of old BibTeX.
+ 
+ \renewbibmacro{in:}{} % Substitute the "in:" for the in-collection template.
+ \setlength\bibhang{0pt} % Indentation size after the first line of a given
+                         % reference.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Reference sources. Example. You can load several.
+
+% \addbibresource{../../../Climate_Sensitivity/CS_references.bib} 
+% \addbibresource{../../../Mathematics/Mathematics_references.bib}
+% \addbibresource{../../../Relative_Humidity/RH_references.bib}
+% \addbibresource{../../../Turbulence+Entrainment/T+E_references.bib}
+%
+% Do it at your project principal file not here.
+
+\endinput

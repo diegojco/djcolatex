@@ -1,0 +1,89 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{djcogrph}[2017/12/08 DJCO graphics package]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% AUXILIARY PACKAGES.
+
+\RequirePackage{ifthen} % Manage conditional expressions.
+\RequirePackage{calc} % Calculation of TeX lengths.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% MAIN PACKAGES.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Extended Graphics package.
+
+\RequirePackage{graphicx}
+
+%%%%%%%%%%%% PGF/TikZ (Portable Graphics Format/TikZ ist kein Zeichenprogramm).
+
+\RequirePackage{tikz} % General purpose descriptive vector graphics.
+ \usetikzlibrary{calc,
+  through,
+  decorations.text,
+  decorations.pathmorphing,
+  shadows,
+  intersections,
+  angles,
+  quotes
+ } % Libraries that expand the basic set.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PGFplots.
+
+\RequirePackage{pgfplots} % Package of PGF/TikZ for plotting scientific data.
+ \pgfplotsset{compat=newest}
+ \usepgfplotslibrary{fillbetween} % Extension for filling between curves.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Additional packages.
+
+\RequirePackage{tikzscale} % Extended includegraphics to scale tikz figures.
+\RequirePackage{subcaption} % Extended management of captions.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% MACROS AND INTERFACES.
+
+\newcommand*{\pgfmathsetnewmacro}[2]{
+ \newcommand*{#1}{}
+ \pgfmathsetmacro{#1}{#2}
+} % set pgf macros and constants for use inside TikZ files.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Fontsizes and linewidths for pgfplots graphics.
+
+\newcommand{\fntszticks}{} % Ticks.
+\newcommand{\fontsizeticks}[1]{\renewcommand{\fntszticks}{\csname#1\endcsname}}
+\newcommand{\fntszlegnd}{} % Legends.
+\newcommand{\fontsizelegnd}[1]{\renewcommand{\fntszlegnd}{\csname#1\endcsname}}
+\newcommand{\fntszlabel}{} % Labels.
+\newcommand{\fontsizelabel}[1]{\renewcommand{\fntszlabel}{\csname#1\endcsname}}
+
+\newlength{\lnwdaxes}
+\newlength{\lnwdauxs}
+\newlength{\lnwdmain}
+\newlength{\lnwdextr}
+\newlength{\lnwdsext}
+
+\newcommand{\linewidths}[1]{ % Stablishes line width series from main value.
+ \setlength{\lnwdmain}{#1} 
+ \setlength{\lnwdauxs}{\lnwdmain/\real{1.414213562373095}}
+ \setlength{\lnwdextr}{\lnwdmain*\real{1.414213562373095}}
+ \setlength{\lnwdaxes}{\lnwdauxs/\real{1.414213562373095}}
+ \setlength{\lnwdsext}{\lnwdextr*\real{1.414213562373095}}
+} % This is based on the square root ratio.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Figure dimensions for tikz/pgfplots graphics.
+
+\newlength{\gboxsize} % Graphic box size.
+\newlength{\gboxsizec} % Complement of graphic box size.
+\newlength{\gboxsizee} % Extra space, e.g. to take into account axes.
+\newlength{\gboxsizef} % Actual size of the graphics.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Ratios for dimensions.
+
+\pgfmathsetnewmacro{\ratiocuadrado}{1} % Equal ratio.
+\pgfmathsetnewmacro{\ratioaureo}{(1+sqrt(5))/2} % Golden ratio.
+\pgfmathsetnewmacro{\ratiotv}{4/3} % TV screen ratio (4:3).
+\pgfmathsetnewmacro{\ratiosqrt}{sqrt(2)} % Square root ratio.
+\pgfmathsetnewmacro{\ratiocine}{16/9} % 16:9 ratio.
+\pgfmathsetnewmacro{\invratiocuadrado}{1} % Inverse of the former ratios.
+\pgfmathsetnewmacro{\invratioaureo}{2/(1+sqrt(5))}
+\pgfmathsetnewmacro{\invratiotv}{3/4}
+\pgfmathsetnewmacro{\invratiosqrt}{1/sqrt(2)}
+\pgfmathsetnewmacro{\invratiocine}{9/16}
+
+\endinput
